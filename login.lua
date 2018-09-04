@@ -1,5 +1,5 @@
 if #ARGV ~= 3 then
-  error("Register should be called with 3 arguments: username, password and current_ip. Actually called with " .. #ARGV .. " arguments")
+  error("Login should be called with 3 arguments: username, password and current_ip. Actually called with " .. #ARGV .. " arguments")
 end
 
 local username = ARGV[1]

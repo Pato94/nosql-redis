@@ -1,5 +1,5 @@
 if #ARGV < 1 then
-  error("Register should be called with at least 1 argument: postURL. Actually called with " .. #ARGV .. " arguments")
+  error("View post should be called with at least 1 argument: postURL. Actually called with " .. #ARGV .. " arguments")
 end
 
 local url = ARGV[1]

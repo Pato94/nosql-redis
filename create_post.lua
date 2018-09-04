@@ -1,5 +1,5 @@
 if #ARGV ~= 3 then
-  error("Register should be called with 3 arguments: title, content and token. Actually called with " .. #ARGV .. " arguments")
+  error("Create post should be called with 3 arguments: title, content and token. Actually called with " .. #ARGV .. " arguments")
 end
 
 local title = ARGV[1]

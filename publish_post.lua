@@ -1,5 +1,5 @@
 if #ARGV ~= 2 then
-  error("Delete post should be called with 2 arguments: url and token. Actually called with " .. #ARGV .. " arguments")
+  error("Publish post should be called with 2 arguments: url and token. Actually called with " .. #ARGV .. " arguments")
 end
 
 local url = ARGV[1]
@@ -13,9 +13,9 @@ end
 
 redis.call("EXPIRE", "session:" .. uuid, 10 * 60)
 
-local deleted = redis.call("SREM", "user:" .. username .. ":posts", url)
-if deleted == 0 then
+local exists = redis.call("SISMEMBER", "user:" .. username .. ":posts", url)
+if exists == 0 then
   error("The given url didn't match any user's posts")
 end
 
-redis.call("DEL", "post:" .. url)
+redis.call("HMSET", "post:" .. url, "public", "true")
