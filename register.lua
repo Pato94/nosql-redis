@@ -16,3 +16,10 @@ end
 
 redis.call("SET", "email:" .. email, username)
 redis.call("SET", "user:" .. username .. ":password", redis.sha1hex(password))
+
+-- Autocomplete stuff
+for i=1, username:len() do
+  redis.call("ZADD", "user_autocomplete", 0, username:sub(1, i))
+end
+
+redis.call("ZADD", "user_autocomplete", 0, username .. "*")

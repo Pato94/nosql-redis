@@ -117,3 +117,7 @@ redis-cli --eval user_profile_posts.lua , pato2 3 8
 # Last published date tests
 echo "Get last published date"
 redis-cli --eval last_published_time.lua , pato2
+
+# Autocomplete tests
+echo "Autocomplete with pat"
+redis-cli --eval autocomplete.lua , pat
