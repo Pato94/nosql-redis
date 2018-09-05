@@ -94,5 +94,9 @@ redis-cli --eval view_post.lua , $post_url $token2
 echo  "View a public post"
 redis-cli --eval view_post.lua , $post_url $token
 
+# List all posts test
+echo "List all posts from another user"
+redis-cli --eval list_all_posts.lua , pato $token2
 
-
+echo "List all posts"
+redis-cli --eval list_all_posts.lua , pato $token
