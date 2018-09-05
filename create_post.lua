@@ -1,3 +1,5 @@
+redis.replicate_commands()
+
 if #ARGV ~= 3 then
   error("Create post should be called with 3 arguments: title, content and token. Actually called with " .. #ARGV .. " arguments")
 end
@@ -13,9 +15,7 @@ end
 
 redis.call("EXPIRE", "session:" .. uuid, 10 * 60)
 
-local current_seed = redis.call("GET", "random") or 3
-math.randomseed(current_seed)
-redis.call("SET", "random", math.random(99))
+math.randomseed(redis.call("TIME")[2])
 
 local random_id = string.gsub(
   "xxxxxxxxxxxx", "[x]",

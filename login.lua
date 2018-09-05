@@ -1,3 +1,5 @@
+redis.replicate_commands()
+
 if #ARGV ~= 3 then
   error("Login should be called with 3 arguments: username, password and current_ip. Actually called with " .. #ARGV .. " arguments")
 end
@@ -25,9 +27,7 @@ for i=1, #known_ips do
   end
 end
 
-local current_seed = redis.call("GET", "random") or 3
-math.randomseed(current_seed)
-redis.call("SET", "random", math.random(99))
+math.randomseed(redis.call("TIME")[2])
 
 if not included_in_known_ips then
   local verify_key = string.gsub(

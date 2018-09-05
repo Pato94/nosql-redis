@@ -16,7 +16,7 @@ redis-cli --eval register.lua , pato9407@gmail.com pato pato
 echo "Register - username: pato2, password: pato"
 redis-cli --eval register.lua , pato9407@gmail.com pato2 pato
 
-# Login
+# Login tests
 echo "Login with a non-existent user"
 redis-cli --eval login.lua , fruta loca 192.168.1.1
 
@@ -100,3 +100,20 @@ redis-cli --eval list_all_posts.lua , pato $token2
 
 echo "List all posts"
 redis-cli --eval list_all_posts.lua , pato $token
+
+# Profile posts tests
+echo "Creating some posts"
+seq 10 20 | while read f;
+  do redis-cli --eval publish_post.lua , "$(redis-cli --eval create_post.lua , "My Post $f" "<html><body>Test $f</body><html>" $token2)" $token2;
+  sleep 1
+done
+
+echo "Getting first 6 posts"
+redis-cli --eval user_profile_posts.lua , pato2 0 5
+
+echo "Getting posts from 3 to 8"
+redis-cli --eval user_profile_posts.lua , pato2 3 8
+
+# Last published date tests
+echo "Get last published date"
+redis-cli --eval last_published_time.lua , pato2

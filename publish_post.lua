@@ -1,3 +1,5 @@
+redis.replicate_commands()
+
 if #ARGV ~= 2 then
   error("Publish post should be called with 2 arguments: url and token. Actually called with " .. #ARGV .. " arguments")
 end
@@ -18,4 +20,5 @@ if exists == 0 then
   error("The given url didn't match any user's posts")
 end
 
+redis.call("ZADD", "user:" .. username .. ":profile:posts", redis.call("TIME")[1], url)
 redis.call("HMSET", "post:" .. url, "public", "true")
