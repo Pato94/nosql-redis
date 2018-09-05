@@ -10,9 +10,9 @@ if redis.call("EXISTS", "email:" .. email) == 1 then
   error("Email is already in use. Aborting")
 end
 
-if redis.call("EXISTS", "user:" .. username) == 1 then
+if redis.call("EXISTS", "user:" .. username .. ":password") == 1 then
   error("Username is already in use. Aborting")
 end
 
 redis.call("SET", "email:" .. email, username)
-redis.call("SET", "user:" .. username, redis.sha1hex(password))
+redis.call("SET", "user:" .. username .. ":password", redis.sha1hex(password))

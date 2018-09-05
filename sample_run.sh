@@ -25,13 +25,19 @@ redis-cli --eval login.lua , pato fruta 192.168.1.1
 
 # Should fail the first time because of Unknown IP
 echo "Login - username: pato, password: pato"
-redis-cli --eval login.lua , pato pato 192.168.1.1
+verify_key=$(redis-cli --eval login.lua , pato pato 192.168.1.1)
+
+echo "Verifying IP 1"
+redis-cli --eval verify_ip.lua , pato $verify_key
 
 echo "Login - username: pato, password: pato"
 token=$(redis-cli --eval login.lua , pato pato 192.168.1.1)
 
 echo "Login - username: pato2, password: pato"
-redis-cli --eval login.lua , pato2 pato 192.168.1.1
+verify_key2=$(redis-cli --eval login.lua , pato2 pato 192.168.1.1)
+
+echo "Verifying IP 2"
+redis-cli --eval verify_ip.lua , pato2 $verify_key2
 
 echo "Login - username: pato2, password: pato"
 token2=$(redis-cli --eval login.lua , pato2 pato 192.168.1.1)

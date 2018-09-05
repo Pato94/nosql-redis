@@ -6,11 +6,11 @@ local username = ARGV[1]
 local password = ARGV[2]
 local current_ip = ARGV[3]
 
-if redis.call("EXISTS", "user:" .. username) == 0 then
+if redis.call("EXISTS", "user:" .. username .. ":password") == 0 then
   error("Unknown user. Aborting")
 end
 
-local hashed_pw = redis.call("GET", "user:" .. username)
+local hashed_pw = redis.call("GET", "user:" .. username .. ":password")
 
 if hashed_pw ~= redis.sha1hex(password) then
   error("Incorrect password. Aborting")
@@ -25,15 +25,21 @@ for i=1, #known_ips do
   end
 end
 
--- Agregamos la IP como conocida tras el primer fallo
-if not included_in_known_ips then
-  redis.call("SADD", "user:" .. username .. ":known_ips", current_ip)
-  error("Unknown IP. Aborting")
-end
-
 local current_seed = redis.call("GET", "random") or 3
 math.randomseed(current_seed)
 redis.call("SET", "random", math.random(99))
+
+if not included_in_known_ips then
+  local verify_key = string.gsub(
+    "xxxxxxxxxx", "[x]",
+    function (c)
+      return string.format("%x", math.random(0, 0xf))
+    end)
+
+  redis.call("SETEX", "verify_ip:" .. verify_key, 15 * 60, current_ip)
+
+  return verify_key
+end
 
 local uuid = string.gsub(
   "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx", "[xy]",
